@@ -1,4 +1,4 @@
-[sequel-sessions]
+sequel-sessions
 =================
 
 Sequel-based session middleware for Rack 2.0 and above.
