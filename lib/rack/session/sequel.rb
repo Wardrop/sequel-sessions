@@ -18,11 +18,7 @@ module Rack
       def find_session(env, sid)
         record = table.filter(sid: sid).first
         if record
-          begin
-            session = Marshal.load(record[:session].unpack('m*').first)
-          rescue ArgumentError
-            session = {}
-          end
+          session = Marshal.load(record[:session].unpack('m*').first)
         else
           sid, session = generate_sid, {}
         end
