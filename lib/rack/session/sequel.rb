@@ -1,7 +1,7 @@
 module Rack
   module Session
     class Sequel < Abstract::Persisted
-
+      VERSION = "1.0.3"
       DEFAULT_OPTIONS = Abstract::Persisted::DEFAULT_OPTIONS.merge(:table_name => :sessions)
 
       # Options arguments can be either a Sequel::Database instance, or a hash. Options beyond those defined in
@@ -27,10 +27,9 @@ module Rack
 
       def write_session(req, sid, session, options)
         with_lock(req) do
-          begin
-            table.insert(sid: sid, session: [Marshal.dump(session)].pack('m*'), :created_at => Time.now.utc)
-          rescue ::Sequel::UniqueConstraintViolation
-            table.filter(sid: sid).update(sid: sid, session: [Marshal.dump(session)].pack('m*'), :updated_at => Time.now.utc)
+          session_data = [Marshal.dump(session)].pack('m*')
+          if table.where(sid: sid).update(session: session_data, :updated_at => Time.now.utc) == 0
+            table.insert(sid: sid, session: session_data, :created_at => Time.now.utc)
           end
           sid
         end

@@ -1,5 +1,5 @@
 $LOAD_PATH.unshift File.expand_path('../lib', __FILE__)
-require 'rack/session/version'
+require 'rack/sequel-sessions'
 
 Gem::Specification.new 'sequel-sessions', Rack::Session::Sequel::VERSION do |s|
   s.summary           = 'Sequel-based session middleware for Rack 2.0+'
